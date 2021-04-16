@@ -1,0 +1,179 @@
+#!/bin/sh
+#
+# A collection of interactive methods to gather user input 
+#
+
+# Gets the first DHCP configured NIC from rc.conf
+getExtIf() {
+  ext_if=`cat /etc/rc.conf | grep -Eo 'ifconfig_([a-z0-9])+="DHCP"' | cut -f 1 -d = | cut -f 2 -d _`
+}
+# Gets the IP of the above NIC
+getExtIp() {
+  ext_ip=`ifconfig vtnet0 | grep inet | cut -f 2 -d ' '`
+}
+
+# Reads any input into $answer
+# optionally accepts a second argument used as a default
+readString() {
+  echo "$1 "
+  read answer
+  if [ "$answer" = "" ]; then
+    answer=$2
+  fi
+}
+# Reads any input into $answer, requires that answer is not empty, 
+# optionally accepts a second argument used as a default
+readStringRequired() {
+  valid="-1"
+  while [ "$valid" = "-1" ]
+  do
+    if [ "$2" = "" ]; then
+      echo "$1 "
+    else
+      echo "$1 [$2] "
+    fi
+    read answer
+
+    if [ "$answer" = "" ]; then
+      answer=$2
+    fi
+    if [ "$answer" != "" ]; then
+      valid="1"
+    fi
+  done
+}
+# Reads a yes or no answer
+readYesNo() {
+  valid="-1"
+  while [ "$valid" = "-1" ]
+  do
+    echo "$1 [y|n] "
+    read answer
+    if [ "$answer" = "" ]; then
+      answer=""
+    else
+      valid="1"
+      case $answer in
+        y | Y | yes | YES ) answer="y";;
+        n | N | no | NO ) answer="n";;
+        *) valid="-1";;
+       esac
+    fi
+  done
+}
+# Reads an IP address, showing current IPs
+readIp() {
+  valid="-1"
+  while [ "$valid" = "-1" ]
+  do
+    if [ "$2" = "" ]; then
+      echo "$1 "
+    else
+      echo "$1 [$2] "
+    fi
+    read answer
+
+    match=`ifconfig | ifconfig | grep -oE '^([a-z0-9]+)' | grep "^${answer}"`
+    if [ "$match" != "" ]; then
+      valid="1"
+    else
+      echo "Cannot find that interface, please choose an existing interface:"
+      echo `ifconfig | grep -oE '^([a-z0-9]+)'`
+    fi
+  done
+}
+# Reads and validates the network interface
+readNetIf() {
+  valid="-1"
+  while [ "$valid" = "-1" ]
+  do
+    if [ "$2" = "" ]; then
+      echo "$1 "
+    else
+      echo "$1 [$2] "
+    fi
+    read answer
+
+    match=`ifconfig | ifconfig | grep -oE '^([a-z0-9]+)' | grep "^${answer}"`
+    if [ "$match" != "" ]; then
+      valid="1"
+    else
+      echo "Cannot find that interface, please choose an existing interface:"
+      echo `ifconfig | grep -oE '^([a-z0-9]+)'`
+    fi
+  done
+}
+# Reads a port number
+readPort() {
+  valid="-1"
+  while [ "$valid" = "-1" ]
+  do
+    if [ "$2" = "" ]; then
+      echo "$1 "
+    else
+      echo "$1 [$2] "
+    fi
+    read answer
+
+    if [ "$answer" = "" ]; then
+      $answer = $2
+      valid="1"
+    elif [ "$answer" -eq "$answer" ] 2>/dev/null; then
+      if [ "$answer" -gt "0" ] && [ "$answer" -lt "65536" ]; then
+        valid="1"
+      fi
+    else
+      echo "Please enter a port number between 0 and 65535"
+    fi
+  done
+}
+# Reads a timezone from /usr/share/zoneinfo
+readTimezone() {
+  valid="-1"
+  while [ "$valid" = "-1" ]
+  do
+    if [ "$2" = "" ]; then
+      echo "$1 "
+    else
+      echo "$1 [$2] "
+    fi
+    read answer
+
+    if [ "$answer" = "" ]; then
+      $answer = $2
+      valid="1"
+    else 
+      if [ -f "/usr/share/zoneinfo/$answer" ]; then
+        valid="1"
+      else
+        echo "Please enter a valid timezone from /usr/share/zoneinfo"
+        exit 0
+      fi
+    fi
+  done
+}
+# Reads a system locale from /usr/share/locale
+readLocale() {
+  valid="-1"
+  while [ "$valid" = "-1" ]
+  do
+    if [ "$2" = "" ]; then
+      echo "$1 "
+    else
+      echo "$1 [$2] "
+    fi
+    read answer
+
+    if [ "$answer" = "" ]; then
+      $answer = $2
+      valid="1"
+    else 
+      if [ -d "/usr/share/locale/$answer" ]; then
+        valid="1"
+      else
+        echo "Please enter a valid locale from /usr/share/locale"
+        exit 0
+      fi
+    fi
+  done
+}
