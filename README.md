@@ -24,8 +24,10 @@ the complex and involved, this philosophy is reflected in this setup.
 #### Shameless plug
 Please use one of the following links to sign up to a VPS provider and we will both get some free 
 credit at no extra cost to you.
-[Vultr](https://www.vultr.com/?ref=8852149) - [Get $100 free!](https://www.vultr.com/?ref=8852150-6G) 
-[Digital Ocean](https://m.do.co/c/3d666f171318) Get $100 free!
+
+  [Digital Ocean](https://m.do.co/c/3d666f171318) Get $100 free!
+
+  [Vultr](https://www.vultr.com/?ref=8852149) - [Get $100 free!](https://www.vultr.com/?ref=8852150-6G) 
 
 
 ## Requirements
