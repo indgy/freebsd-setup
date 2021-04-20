@@ -5,7 +5,7 @@
 
 # Gets the first DHCP configured NIC from rc.conf
 getExtIf() {
-  ext_if=`cat /etc/rc.conf | grep -Eo 'ifconfig_([a-z0-9])+="DHCP"' | cut -f 1 -d = | cut -f 2 -d _`
+  ext_if=`cat /etc/rc.conf | grep -Eo 'ifconfig_([a-z0-9])+="(DHCP|SYNCDHCP)"' | cut -f 1 -d = | cut -f 2 -d _`
 }
 # Gets the IP of the above NIC
 getExtIp() {
@@ -147,6 +147,7 @@ readTimezone() {
         valid="1"
       else
         echo "Please enter a valid timezone from /usr/share/zoneinfo"
+        showTimezones
         exit 0
       fi
     fi
@@ -172,8 +173,15 @@ readLocale() {
         valid="1"
       else
         echo "Please enter a valid locale from /usr/share/locale"
+        showLocales
         exit 0
       fi
     fi
   done
+}
+showLocales() {
+  `ls -d /usr/share/locale/*.UTF-8 | grep -Eo '([a-z]{2}_[A-Z]{2})' | column`
+}
+showTimezones() {
+  `ls /usr/share/zoneinfo/ | grep -E '([A-Z\-]+)' | column`
 }
