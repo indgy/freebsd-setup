@@ -135,6 +135,6 @@ Think of -RELEASE as the 'shrink-wrapped' version ;-)
 
 ## Security 
 * Further configuration of the firewall is recommended
-* Additionally some though needs to be given to the arrangement and managemetn of the jails
+* Additionally some thought needs to be given to the arrangement and management of the jails
 * If you are concerned about the physical security of your virtual machine you may want to set the
   console to insecure in `/etc/ttys`
