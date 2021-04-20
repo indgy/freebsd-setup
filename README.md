@@ -67,7 +67,8 @@ The following additional packages will be installed, requiring a tiny (~0.25Mb) 
 As root on a freshly installed FreeBSD system type the following to fetch the setup script and make it executable:
 
 ```sh
-fetch https://raw.githubusercontent.com/indgy/freebsd-setup/main/freebsd-setup --user-agent="Mozilla" && chmod 0700 freebsd-setup.sh
+fetch https://raw.githubusercontent.com/indgy/freebsd-setup/main/freebsd-setup \
+&& chmod 0700 freebsd-setup.sh
 ```
 
 To see all options:
