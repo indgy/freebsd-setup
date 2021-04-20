@@ -67,7 +67,7 @@ The following additional packages will be installed, requiring a tiny (~0.25Mb) 
 As root on a freshly installed FreeBSD system type the following to fetch the setup script and make it executable:
 
 ```sh
-fetch https://github.com/indgy/freebsd-setup/freebsd-setup.sh --user-agent="Mozilla" && chmod 0700 freebsd-setup.sh
+fetch https://raw.githubusercontent.com/indgy/freebsd-setup/main/freebsd-setup --user-agent="Mozilla" && chmod 0700 freebsd-setup.sh
 ```
 
 To see all options:
@@ -79,7 +79,7 @@ To see all options:
 Then provide your config as arguments.
 
 ```sh
-./freebsd-setup.sh \
+./freebsd-setup \
   --ssh-user="admin" \              # the name of the user who will ssh in
   --ssh-user-key="ssh-rsa ..." \    # provide a string, a local file or the url of a remote file
   --mail-to="admin@yourdomain.com"  # all mail will be forwarded to this address
@@ -98,7 +98,7 @@ Reference the config file using the `-c` or `--config` arguments
  # A local file
 ./freebsd-setup -c=/path/to/setup.conf
  # A remote file via http or ftp
-./freebsd-setup.sh -c=https://yourdomain.com/setup/setup.conf
+./freebsd-setup -c=https://yourdomain.com/setup/setup.conf
 ```
 
 The external IP address and default NIC are determined from the first DHCP enabled NIC in /etc/rc.conf.
