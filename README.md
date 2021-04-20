@@ -120,6 +120,7 @@ If you're new(ish) to FreeBSD checkout these resources:
 * Refer to the documentation at [docs.freebsd.org](https://docs.freebsd.org/) especially the [Handbook](https://docs.freebsd.org/en_US.ISO8859-1/books/handbook/)
 * Refresh your memory with the manual pages at [man.freebsd.org](https://man.freebsd.org) 
 
+<!--
 A quick guide to -CURRENT, -STABLE, -RELEASE, the FreeBSD development branches
 
 Though not quite accurate, FreeBSD branches can be thought of like so:
@@ -130,7 +131,10 @@ Though not quite accurate, FreeBSD branches can be thought of like so:
 
 While -STABLE is generally reliable it is best to use -RELEASE, especially on public facing servers.
 Think of -RELEASE as the 'shrink-wrapped' version ;-)
+-->
 
 ## Security 
+* Further configuration of the firewall is recommended
+* Additionally some though needs to be given to the arrangement and managemetn of the jails
 * If you are concerned about the physical security of your virtual machine you may want to set the
   console to insecure in `/etc/ttys`
