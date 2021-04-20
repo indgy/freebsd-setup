@@ -1,24 +1,31 @@
 # FreeBSD Setup 
 
-A simple provisioning script to setup a freshly installed FreeBSD server, ideal for quick setup of 
-VPS from Digital Ocean, Vultr, AWS etc.
+A simple provisioning script to setup a freshly installed FreeBSD server as a jail (container) host, 
+ideal for quick setup of bare metal or VPS from Digital Ocean, Vultr, AWS etc..
 
-This is a fairly un-opinionated setup, it will install only sane, lightweight and performant 
-additional utilities where absolutely necessary. I prefer lightweight and simle solutions over 
-the complex and involved, this philosophy is reflected in this setup.
+## Quickstart
 
+```sh
+fetch https://raw.githubusercontent.com/indgy/freebsd-setup/main/freebsd-setup \
+&& chmod 0700 freebsd-setup
+./freebsd-setup -h
+```
+
+This is a fairly un-opinionated setup script, it will install the bare minimum choosing, lightweight 
+and performant additional utilities only where absolutely necessary. 
 
 * Installs `doas` instead of `sudo`
   Doas ~100Kb, Sudo ~7,000kb
-* Installs `BastilleBSD` rather than using the built in jails for convenience. BastilleBSD has
-  no dependencies other than `/bin/sh` and is very convenient for it's lightweight size ~195Kb
+* Installs `BastilleBSD` which has no dependencies other than `/bin/sh` and the built in jail commands
+  it is very convenient for it's lightweight size ~195Kb
 * No Sendmail
   The built in DMA mailer is used for sending out all system messages
 * UTF-8 charset
-  Defaults to UTF-8 only
+  Defaults to UTF-8 only for many, many reasons
 * No bash
   Bash is great on MacOS (now uses Zsh) or Linux, but the built in `tcsh` is perfectly good for 
-  interactive use. (If you really need bash just `pkg install bash` and `chsh -s /usr/local/bin/bash`)
+  interactive use so we'll stick with that.
+  (If you really need bash just `pkg install bash` and `chsh -s /usr/local/bin/bash`)
 
 
 #### Shameless plug
@@ -40,9 +47,9 @@ A *freshly installed* FreeBSD server running 11.4-RELEASE or 12.2-RELEASE or hig
 
 The following additional packages will be installed, requiring a tiny (~0.25Mb) additional download
 
-* [Doas](https://www.freebsd.org/cgi/man.cgi?query=doas) (45Kb) - Simple sudo alternative from OpenBSD to run commands as another user
-* [BastilleBSD](https://bastillebsd.org) (195Kb) - The container (jail) automation framework
 * CA Root NSS - Root certificate bundle from the Mozilla Project, required for encrypted communications
+* [BastilleBSD](https://bastillebsd.org) (195Kb) - The container (jail) automation framework
+* [Doas](https://www.freebsd.org/cgi/man.cgi?query=doas) (45Kb) - Simple sudo alternative from OpenBSD to run commands as another user
 
 ## What it does
 
@@ -115,8 +122,10 @@ Once you have setup the script and the server has rebooted you have a great setu
 
 Depending on your requirements you may want to:
 
-* Add a monitoring solution
-* Install apps in jails, see the [Bastille Templates](https://gitlab.com/bastillebsd-templates) repository for pre built apps
+* Further lock down your machine.
+* Add a monitoring solution (checkout the bin/slack-notify script).
+* Take a snapshot of the current state.
+* Install apps in jails, see the [Bastille Templates](https://gitlab.com/bastillebsd-templates) repository for pre built apps.
 
 If you're new(ish) to FreeBSD checkout these resources:
 
