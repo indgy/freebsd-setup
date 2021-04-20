@@ -1,0 +1,57 @@
+#!/bin/sh
+# blocklist - Common commands for managing PF and Blacklistd
+# Part of freebsd-setup https://github.com/indgy/freebsd-setup
+
+add() {
+  pfctl -a blacklistd/${port} -t port${port} -T add ${ip}
+}
+show() {
+  blacklistctl dump -br
+}
+remove() {
+  pfctl -a blacklistd/${port} -t port${port} -T delete ${ip}
+}
+checkIp() {
+  if [ "$ip" = "" ]; then
+    usage; exit
+  fi
+}
+checkPort() {
+  if [ "$port" = "" ]; then
+    usage; exit
+  fi
+}
+usage() {
+  printf "
+Usage: blocklist add|remove [ip] [port]
+
+Examples:
+# Adds the IP 1.2.3.4 to the blocklist on port 22
+blocklist add 1.2.3.4 22 
+
+# Removes the IP 1.2.3.4 from the blocklist on port 80
+blocklist remove 1.2.3.4 80 
+
+"
+}
+port=$3
+ip=$2
+
+case $1 in
+  add)
+    checkIP
+    checkPort
+    add
+    ;;
+  show)
+    show
+    ;;
+  remove)
+    checkIP
+    checkPort
+    remove
+    ;;
+  *)
+    usage
+    ;;
+esac
