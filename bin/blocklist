@@ -1,6 +1,8 @@
 #!/bin/sh
 # blocklist - Common commands for managing PF and Blacklistd
 # Part of freebsd-setup https://github.com/indgy/freebsd-setup
+# LICENCE BSD-3-Clause Copyright 2021 Ian Grindley <me@indgy.uk>
+
 
 add() {
   pfctl -a blacklistd/${port} -t port${port} -T add ${ip}

@@ -1,6 +1,8 @@
 #!/bin/sh
 # monit-slack-notify Creates a formatted Slack notification from a Monit alert
 # Part of freebsd-setup https://github.com/indgy/freebsd-setup
+# LICENCE BSD-3-Clause Copyright 2021 Ian Grindley <me@indgy.uk>
+
 
 
 /usr/local/bin/slack-notify \

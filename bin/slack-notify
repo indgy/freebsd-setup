@@ -1,6 +1,7 @@
 #!/bin/sh
 # slack-notify A generic Slack Webhook notification script
 # Part of freebsd-setup https://github.com/indgy/freebsd-setup
+# LICENCE BSD-3-Clause Copyright 2021 Ian Grindley <me@indgy.uk>
 
 # This script will work on a default FreeBSD install, it does not require cURL
 # however if cURL is installed it will be preferred over a direct connection
