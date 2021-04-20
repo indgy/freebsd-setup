@@ -1,0 +1,8 @@
+#!/bin/sh
+# monit-slack-notify Creates a formatted Slack notification from a Monit alert
+# Part of freebsd-setup https://github.com/indgy/freebsd-setup
+
+
+/usr/local/bin/slack-notify \
+  --name="Monit" \
+  --text="${MONIT_DATE}\n${MONIT_SERVICE} - ${MONIT_DESCRIPTION}"

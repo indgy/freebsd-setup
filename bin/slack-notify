@@ -1,0 +1,170 @@
+#!/bin/sh
+# slack-notify A generic Slack Webhook notification script
+# Part of freebsd-setup https://github.com/indgy/freebsd-setup
+
+# This script will work on a default FreeBSD install, it does not require cURL
+# however if cURL is installed it will be preferred over a direct connection
+
+# Set this to your Slack webhook path (excludes the hostname)
+# url="/services/ABCDEFGH/ABCDEFGHIJK/ABCDEFGHIJKLMNOPQRSTUVWX"
+url=""
+
+usage() {
+  printf 'Usage: slack-notify "Notification message"'
+  printf "
+Required parameters
+
+  Content of the notification
+  -- OR --
+  --payload    - A raw JSON payload to send (replaces all other options)
+
+Optional parameters
+
+  -h --help    - Shows this help
+
+  -n --name    - The name of the user sending the notification
+  -c --channel - The channel to send the notification to
+  -p --pretext - The notification pre-text
+  -c --color   - The notification highlight color
+  -i --icon    - A URL to an icon image to use
+  -e --emoji   - The name of an emoji to use
+  -t --text    - Content of the notification
+
+"
+}
+
+if [ $# == 0 ] ; then
+  usage
+  exit 1;
+fi
+
+# set default values
+name=""
+channel=""
+pretext=""
+color=""
+icon=""
+emoji=""
+text=$1
+
+shift
+
+# parse command line values
+while [ "$1" != "" ]; do
+  param=`echo $1 | awk -F= '{print $1}'`
+  value=`echo $1 | awk -F= '{print $2}'`
+  case $param in
+      -h | --help)
+          usage
+          exit 0
+          ;;
+      --payload)
+          payload=$value
+          ;;
+      -n | --name)
+          name=$value
+          ;;
+      -c | --channel)
+          channel=$value
+          ;;
+      -p | --pretext)
+          pretext=$value
+          ;;
+      -c | --color)
+          color=$value
+          ;;
+      -i | --icon)
+          icon=$value
+          ;;
+      -e | --emoji)
+          emoji=$value
+          ;;
+      -t | --text)
+          text=$value
+          ;;
+      *)
+          echo "ERROR: unknown parameter '$param'"
+          usage
+          exit 0
+          ;;
+  esac
+  shift
+done
+
+if [ "$text" = "" ] && [ "$payload" = "" ] ; then
+  echo "ERROR: Notification message or '--payload' paramater must be provided"
+  usage
+  exit 0
+fi
+
+if [ "$payload" != "" ]; then
+  data=$payload
+else
+  data="{ "
+  if [ "$name" != "" ]; then
+    data="${data},\"username\":\"${name}\""
+  fi
+  if [ "$channel" != "" ]; then
+    if [ "$data" != "{ " ]; then
+      data="${data},"
+    fi
+    data="${data}\"channel\":\"${channel}\""
+  fi
+  if [ "$pretext" != "" ]; then
+    if [ "$data" != "{ " ]; then
+      data="${data},"
+    fi
+    data="${data}\"pretext\":\"${pretext}\""
+  fi
+  if [ "$color" != "" ]; then
+    if [ "$data" != "{ " ]; then
+      data="${data},"
+    fi
+    data="${data}\"color\":\"${color}\""
+  fi
+  if [ "$icon" != "" ]; then
+    if [ "$data" != "{ " ]; then
+      data="${data},"
+    fi
+    data="${data}\"icon_url\":\":${icon}:\""
+  fi
+  if [ "$emoji" != "" ]; then
+    if [ "$data" != "{ " ]; then
+      data="${data},"
+    fi
+    data="${data}\"icon_emoji\":\":${emoji}:\""
+  fi
+  if [ "$data" != "{ " ]; then
+    data="${data},"
+  fi
+  # escape double quotes in text
+  text=`echo "${text}" | sed 's/"/\\\"/g'`
+  data="${data}\"text\":\"${text}\" }"
+fi
+
+if [ -f /usr/local/bin/curl ]; then
+
+  # echo "Sending via cURL"
+  url="https://hooks.slack.com${url}"
+  /usr/local/bin/curl \
+    -X POST \
+    -H "Content-type: application/json" \
+    -s \
+    --data "${data}" \
+    $url
+
+else
+
+  # echo "Sending direct"
+  len=`echo ${data} | wc -m`
+  printf "POST ${url} HTTP/1.1\r\n\
+Host: hooks.slack.com\r\n\
+User-Agent: slack-notify/0.1.1\r\n\
+Accept: */*\r\n\
+Content-Type: application/json; charset=utf-8\r\n\
+Content-Length: ${len}\r\n\
+\r\n\
+${data}
+" | openssl s_client -connect hooks.slack.com:443
+
+fi
